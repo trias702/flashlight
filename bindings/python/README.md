@@ -97,6 +97,7 @@ The following environment variables can be used to control various options:
 ### Windows 10 Build Instructions
 
 - Make sure you set your distutils.cfg to `compiler=msvc`
+- Download and install MingW64 TDM-GCC, and make sure to install it with OpenMP support. Then place `TDM-GCC-64\bin` on your $PATH
 - Download OpenBLAS-0.3.6-x64 (https://sourceforge.net/projects/openblas/files/v0.3.6) somewhere and place `OpenBLAS-0.3.6-x64/bin` on your $PATH
 - Download fftw-3.3.5-dll64 (http://www.fftw.org/install/windows.html) somewhere and place `fftw-3.3.5-dll64/lib` on your $PATH
 	+ To generate a GCC .a file from a .def and .dll use: `dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3-3.dll.a`
@@ -119,7 +120,12 @@ The following environment variables can be used to control various options:
 	+ libfftw3l-3.dll
 	+ libopenblas.dll
 
-You should be all done and ready to go!
+- Check that you can run all of the examples in bindings/python/examples
+```
+python feature_example.py ../../../flashlight/lib/test/audio/feature/data
+python decoder_example.py ../../../flashlight/app/asr/test/decoder/data
+python criterion_example.py
+```
 
 
 ## Python API
