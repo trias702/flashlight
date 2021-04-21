@@ -63,7 +63,7 @@ class CMakeBuild(build_ext):
         source_dir = str(Path(__file__).absolute().parent.parent.parent)
         use_cuda = "OFF" if check_negative_env_flag("USE_CUDA") else "ON"
         use_kenlm = "OFF" if check_negative_env_flag("USE_KENLM") else "ON"
-        use_mkl = "OFF" if check_negative_env_flag("USE_MKL") else "ON"
+        use_mkl = "ON" if check_negative_env_flag("USE_MKL") else "OFF"
         backend = "CPU" if check_negative_env_flag("USE_CUDA") else "CUDA"
         cmake_args = [
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + ext_dir,
@@ -84,21 +84,37 @@ class CMakeBuild(build_ext):
         build_args = ["--config", cfg]
 
         if platform.system() == "Windows":
-            # cmake_args += [
-            #     "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), ext_dir)
-            # ]
-            # if sys.maxsize > 2 ** 32:
-            #     cmake_args += ["-A", "x64"]
-            # build_args += ["--", "/m"]
-            raise RuntimeError("flashlight doesn't support building on Windows yet")
+            cmake_args += [
+                "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}".format(cfg.upper(), ext_dir)
+            ]
+            cmake_args += ["-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=TRUE"]
+            cmake_args += ["-DBUILD_SHARED_LIBS=TRUE"]
+            if sys.maxsize > 2 ** 32:
+                cmake_args += ["-A", "x64"]
+            build_args += ["--"]
+            #cmake_args += ["-G", "MSYS Makefiles"]
+            cmake_args += ["-DFFTW3_ROOT=C:/Unix/fftw-3.3.5-dll64"]
+            cmake_args += ["-DKENLM_ROOT=E:/Github/kenlm"]
+            cmake_args += ["-DKENLM_LIB=E:/Github/kenlm/lib/kenlm.lib"]
+            #cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
             build_args += ["--", "-j4"]
 
         env = os.environ.copy()
-        env["CXXFLAGS"] = '{} -fPIC -DVERSION_INFO=\\"{}\\"'.format(
-            env.get("CXXFLAGS", ""), self.distribution.get_version()
-        )
+        if platform.system() == "Windows":
+            # -Wl,--export-all-symbols
+            #env["CXXFLAGS"] = '{} -static -std=c++11 -fopenmp -static-libstdc++ -DMS_WIN64 -D_hypot=hypot -fPIC -DVERSION_INFO=\\"{}\\" -Wl,-static'.format(
+            #    env.get("CXXFLAGS", ""), self.distribution.get_version()
+            #)
+            env["CXXFLAGS"] = '{} -D_USE_MATH_DEFINES /std:c++latest -std:c++latest -DVERSION_INFO=\\"{}\\"'.format(
+                env.get("CXXFLAGS", ""), self.distribution.get_version()
+            )
+            #env["LDFLAGS"] = '{} -static'.format(env.get("LDFLAGS", ""))
+        else:
+            env["CXXFLAGS"] = '{} -fPIC -DVERSION_INFO=\\"{}\\"'.format(
+                env.get("CXXFLAGS", ""), self.distribution.get_version()
+            )
 
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)

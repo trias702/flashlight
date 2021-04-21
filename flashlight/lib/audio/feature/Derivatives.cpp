@@ -7,6 +7,7 @@
 
 #include "flashlight/lib/audio/feature/Derivatives.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <stdexcept>
 

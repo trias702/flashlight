@@ -7,10 +7,12 @@
 
 #include "flashlight/lib/common/System.h"
 
-#include <glob.h>
+// #include <glob.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <array>
+#include <string>
+#include <direct.h>
 #include <cstdlib>
 #include <ctime>
 #include <functional>
@@ -123,11 +125,11 @@ void dirCreate(const std::string& path) {
   if (dirExists(path)) {
     return;
   }
-  mode_t nMode = 0755;
   int nError = 0;
 #ifdef _WIN32
   nError = _mkdir(path.c_str());
 #else
+  mode_t nMode = 0755;
   nError = mkdir(path.c_str(), nMode);
 #endif
   if (nError != 0) {
@@ -169,7 +171,7 @@ std::string getEnvVar(
   char* val = getenv(key.c_str());
   return val ? std::string(val) : dflt;
 }
-
+/*
 std::string getCurrentDate() {
   time_t now = time(nullptr);
   struct tm tmbuf;
@@ -191,7 +193,7 @@ std::string getCurrentTime() {
   strftime(buf.data(), buf.size(), "%X", tstruct);
   return std::string(buf.data());
 }
-
+*/
 std::string getTmpPath(const std::string& filename) {
   std::string tmpDir = "/tmp";
   auto getTmpDir = [&tmpDir](const std::string& env) {
@@ -216,7 +218,7 @@ std::vector<std::string> getFileContent(const std::string& file) {
   in.close();
   return data;
 }
-
+/*
 std::vector<std::string> fileGlob(const std::string& pat) {
   glob_t result;
   glob(pat.c_str(), GLOB_TILDE, nullptr, &result);
@@ -227,7 +229,7 @@ std::vector<std::string> fileGlob(const std::string& pat) {
   globfree(&result);
   return ret;
 }
-
+*/
 std::ifstream createInputStream(const std::string& filename) {
   std::ifstream file(filename);
   if (!file.is_open()) {

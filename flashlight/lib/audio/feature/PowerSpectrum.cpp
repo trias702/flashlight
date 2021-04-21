@@ -10,6 +10,7 @@
 #include <fftw3.h>
 
 #include <algorithm>
+#include <numeric>
 #include <cstddef>
 #include <unordered_map>
 

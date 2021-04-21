@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <string>
 #include <iostream>
 #include <limits>
 

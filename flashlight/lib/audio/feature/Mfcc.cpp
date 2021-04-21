@@ -7,6 +7,7 @@
 
 #include "flashlight/lib/audio/feature/Mfcc.h"
 
+#include <numeric>
 #include <cstddef>
 
 #include "flashlight/lib/audio/feature/SpeechUtils.h"
