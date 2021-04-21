@@ -21,6 +21,8 @@
 
 find_package(FFTW3 CONFIG)
 
+cmake_policy(SET CMP0074 NEW)
+
 if (NOT FFTW3_FOUND)
   # If environment variable FFTWDIR is specified, it has same effect as FFTW3_ROOT
   if (NOT FFTW3_ROOT AND ENV{FFTWDIR} )
@@ -48,6 +50,7 @@ if (NOT FFTW3_FOUND)
   else()
     set( CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_SHARED_LIBRARY_SUFFIX} )
   endif()
+  message(STATUS "CURRENT FFTW3_ROOT IS: ${FFTW3_ROOT}")
   if (FFTW3_ROOT )
     #find libs
     find_library(
@@ -101,6 +104,18 @@ if (NOT FFTW3_FOUND)
       PATHS ${PKG_FFTW3_INCLUDE_DIRS} ${INCLUDE_INSTALL_DIR}
       )
   endif (FFTW3_ROOT )
+  message(STATUS "CURRENT FFTW3_INCLUDES IS: ${FFTW3_INCLUDES}")
+  message(STATUS "CURRENT FFTW3_LIB IS: ${FFTW3_LIB}")
+  message(STATUS "CURRENT FFTWF_LIB IS: ${FFTWF_LIB}")
+  message(STATUS "CURRENT FFTWL_LIB IS: ${FFTWL_LIB}")
+  if (WIN32)
+      set(FFTW3_LIB ${FFTW3_ROOT}/lib/libfftw3-3.lib)
+      set(FFTWF_LIB ${FFTW3_ROOT}/lib/libfftw3f-3.lib)
+      set(FFTWL_LIB ${FFTW3_ROOT}/lib/libfftw3l-3.lib)
+  endif( )
+  message(STATUS "CURRENT FFTW3_LIB IS: ${FFTW3_LIB}")
+  message(STATUS "CURRENT FFTWF_LIB IS: ${FFTWF_LIB}")
+  message(STATUS "CURRENT FFTWL_LIB IS: ${FFTWL_LIB}")
   set(FFTW3_LIBRARIES ${FFTW3_LIB} ${FFTWF_LIB})
   if(FFTWL_LIB)
     set(FFTW3_LIBRARIES ${FFTW3_LIBRARIES} ${FFTWL_LIB})
