@@ -6,7 +6,7 @@ This source code is licensed under the BSD-style license found in the
 LICENSE file in the root directory of this source tree.
 """
 
-from .flashlight_lib_text_dictionary import (
+from flashlight.flashlight_lib_text_dictionary import (
     Dictionary,
     create_word_dict,
     load_words,

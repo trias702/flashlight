@@ -94,6 +94,34 @@ The following environment variables can be used to control various options:
     cd /root/flashlight/bindings/python && python3 setup.py install
 ```
 
+### Windows 10 Build Instructions
+
+- Make sure you set your distutils.cfg to `compiler=msvc`
+- Download OpenBLAS-0.3.6-x64 (https://sourceforge.net/projects/openblas/files/v0.3.6) somewhere and place `OpenBLAS-0.3.6-x64/bin` on your $PATH
+- Download fftw-3.3.5-dll64 (http://www.fftw.org/install/windows.html) somewhere and place `fftw-3.3.5-dll64/lib` on your $PATH
+	+ To generate a GCC .a file from a .def and .dll use: `dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3-3.dll.a`
+	+ To generate a MSVC lib/exp file from a .def and .dll use:
+	```
+	vcvars32.bat
+	
+	lib /def:yourfile.def /machine:x64 /out:yourfile64.lib
+	```
+	+ Make sure you point to your FFTW-3 root directory inside of `flashlight/bindings/python/setup.py`
+- Download CMake for Windows, place it somewhere, and put `CMake/bin` on your $PATH
+- Download and build KenLM for Windows, make sure you point to the lib directory of KenLM inside of `flashlight/bindings/python/setup.py`
+
+- Build with `python setup.py bdist_wheel` then install the wheel
+- Copy all *.pyd files from `bindings\python\build\lib.win-amd64-3.6\` to `site-packages\flashlight\` inside your Python sys.path
+- Copy the fl-libraries.dll from `bindings\python\build\temp.win-amd64-3.6\Release\Release\` to `site-packages\flashlight\` inside your Python sys.path
+- Copy the following DLLs to `site-packages\flashlight\`
+	+ libfftw3-3.dll
+	+ libfftw3f-3.dll
+	+ libfftw3l-3.dll
+	+ libopenblas.dll
+
+You should be all done and ready to go!
+
+
 ## Python API
 
 ### Featurization
